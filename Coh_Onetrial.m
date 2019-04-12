@@ -91,6 +91,13 @@ singlechan=squeeze(allchanseachblock_ds(lookatchannel,length(startat):end));
 [spec_TF, time_TF, freq_TF] = mtspecgramc(singlechan, movingwin, paramsforspectrogram);
 
 logspec= log(spec_TF);
+
+%%
+
+% [kernel, HBwidth]= buildconvSNRkernel(1,2,freq_TF, 3,1,logspec(1,:));
+% 
+
+
 %% %%%%%%%% 
 % %%%%%%%% 
 % %%%%%%%%              PLOTTING 
@@ -150,15 +157,13 @@ title(['EEG at channel ' num2str(lookatchannel) ' (spectrum)'])
 %% From here. Look at the coherence between EEG data and the behavioural data.
 %resample entire data to same length:
 
-%resample to 250 Hz (for both)
-resamp_Fs= 250; % hz
-
+%resample Behavioural data to same length as EEG
 
 %Behaviour:
-% linspX= linspace(0,1,length(rivalrytrace));
-linspX= 0:length(rivalrytrace); 
-rs_beh = resample(rivalrytrace, linspX, resamp_Fs*length(linspX))'; 
-
+linspX= linspace(0,1,length(rivalrytrace));
+% linspX= 0:length(rivalrytrace); 
+rs_beh = resample(rivalrytrace', linspX, length(singlechan)); 
+%%
 %EEG (already at 250 Hz).
 % linspX= linspace(0,1,length(singlechan));
 % rs_EEG = resample(singlechan, linspX, resamp_Fs); 
